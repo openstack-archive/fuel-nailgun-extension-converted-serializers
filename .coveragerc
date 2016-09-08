@@ -1,0 +1,6 @@
+[run]
+branch = True
+source = converted_serializers
+
+[report]
+ignore_errors = True
