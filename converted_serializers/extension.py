@@ -19,6 +19,7 @@ from nailgun import extensions
 from nailgun import objects
 from nailgun.orchestrator.deployment_serializers import \
     get_serializer_for_cluster
+from nailgun import utils
 
 
 logger = logging.getLogger(__name__)
@@ -27,38 +28,71 @@ logger = logging.getLogger(__name__)
 class ConvertPreLCMtoLCM(extensions.BasePipeline):
 
     @classmethod
-    def pre_process_data(cls, data, cluster, nodes, **kwargs):
+    def pre_process_data_for_cluster(cls,cluster, data, **kwargs):
         return data
 
     @classmethod
-    def post_process_data(cls, data, cluster, nodes, **kwargs):
+    def post_process_data_for_cluster(cls, cluster, data, **kwargs):
         return data
 
     @classmethod
-    def serialize(cls, data, cluster, nodes, **kwargs):
+    def pre_process_data_for_node(cls, node, data, **kwargs):
+        return data
+
+    @classmethod
+    def post_process_data_for_node(cls, node, data, **kwargs):
+        return data
+
+    @classmethod
+    def serialize_cluster(cls, cluster, data, **kwargs):
         if objects.Release.is_lcm_supported(cluster.release):
             return data
-        serializer = get_serializer_for_cluster(cluster)()
-        real_data = serializer.serialize(cluster, nodes, **kwargs)
-        return real_data
+        else:
+            serializer = get_serializer_for_cluster(cluster)()
+            serializer.initialize(cluster)
+            common_attrs = serializer.get_common_attrs(cluster)
+            if cluster.replaced_deployment_info:
+                # patch common attributes with custom deployment info
+                utils.dict_update(
+                    common_attrs, cluster.replaced_deployment_info
+                )
+            return common_attrs
 
     @classmethod
-    def process_deployment(cls, data, cluster, nodes, **kwargs):
-        pre_processed_data = cls.pre_process_data(data,
-                                                  cluster, nodes, **kwargs)
-        real_data = cls.serialize(pre_processed_data, cluster, nodes, **kwargs)
-        post_processed_data = cls.post_process_data(real_data,
-                                                    cluster, nodes, **kwargs)
+    def serialize_node(cls, node, data, **kwargs):
+        if objects.Release.is_lcm_supported(node.cluster.release):
+            return data
+        else:
+            serializer = get_serializer_for_cluster(node.cluster)()
+            serializer.initialize(node.cluster)
+            role = objects.Node.all_roles(node)[0]
+            real_data = serializer.serialize_node({}, node, role)
+            return real_data
+
+    @classmethod
+    def process_deployment_for_cluster(cls, cluster, data, **kwargs):
+        pre_processed_data = cls.pre_process_data_for_cluster(cluster, data, **kwargs)
+        real_data = cls.serialize_cluster(cluster, pre_processed_data, **kwargs)
+
+        post_processed_data = cls.post_process_data_for_cluster(cluster, real_data, **kwargs)
         # copypaste cluster specific values from LCM serializer.
         # This is needed for tasks paramters interpolation like CLUSTER_ID
-        cluster_data = data[0]['cluster']
-        for node_data in post_processed_data:
-            node_data['cluster'] = cluster_data
+        cluster_data = data['cluster']
+        post_processed_data['cluster'] = cluster_data
         return post_processed_data
 
     @classmethod
-    def process_provisioning(cls, data, cluster, nodes, **kwargs):
-        return data
+    def process_deployment_for_node(cls, node, node_data, **kwargs):
+        pre_processed_data = cls.pre_process_data_for_node(node, node_data, **kwargs)
+        real_data = cls.serialize_node(node, pre_processed_data, **kwargs)
+
+        post_processed_data = cls.post_process_data_for_node(node, real_data,
+                                                    **kwargs)
+        return post_processed_data
+
+    #@classmethod
+    #def process_provisioning(cls, data, cluster, nodes, **kwargs):
+    #    return data
 
 
 class ConvertedSerializersExtension(extensions.BaseExtension):

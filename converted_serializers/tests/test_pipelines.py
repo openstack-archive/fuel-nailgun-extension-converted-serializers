@@ -28,10 +28,12 @@ from nailgun import rpc
 
 from nailgun.orchestrator import deployment_serializers
 from nailgun.orchestrator.deployment_serializers import \
+    deployment_info_to_legacy
+from nailgun.orchestrator.deployment_serializers import \
     get_serializer_for_cluster
-from nailgun.orchestrator.neutron_serializers import \
+from nailgun.extensions.network_manager.serializers.neutron_serializers import \
     NeutronNetworkDeploymentSerializer80
-from nailgun.orchestrator.neutron_serializers import \
+from nailgun.extensions.network_manager.serializers.neutron_serializers import \
     NeutronNetworkTemplateSerializer80
 from nailgun.test.integration.test_orchestrator_serializer import \
     BaseDeploymentSerializer
@@ -307,6 +309,8 @@ class TestDeploymentAttributesSerialization80MixIn(
         objects.Cluster.prepare_for_deployment(self.cluster_db)
         serialized_for_astute = self.serializer.serialize(
             self.cluster_db, self.cluster_db.nodes)
+        serialized_for_astute = deployment_info_to_legacy(
+            serialized_for_astute)
         for node in serialized_for_astute:
             self.assertEqual(
                 {
