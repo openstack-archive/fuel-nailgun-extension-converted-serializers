@@ -1,4 +1,6 @@
+# UUID                                  	Group Name
+#
 528b9d603ab50605cd6c04465f61936c39c1ae81	fuel-release
-ec3420e0495ce80c7a8f6fc1bb6aa1dce50a5b47	fuel-abandon-bot
-87fd32797f81799ad4ee167d7194d3987af3c29b	fuel-ci
 7debf2751cee8002157fb3fd6208109155ff81b0	fuel-convserializers-core
+87fd32797f81799ad4ee167d7194d3987af3c29b	fuel-ci
+ec3420e0495ce80c7a8f6fc1bb6aa1dce50a5b47	fuel-abandon-bot
