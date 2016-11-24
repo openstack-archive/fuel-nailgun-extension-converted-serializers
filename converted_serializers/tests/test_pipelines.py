@@ -26,15 +26,15 @@ from nailgun.db.sqlalchemy import models
 from nailgun import objects
 from nailgun import rpc
 
+from nailgun.extensions.network_manager.serializers.neutron_serializers import \
+    NeutronNetworkDeploymentSerializer80
+from nailgun.extensions.network_manager.serializers.neutron_serializers import \
+    NeutronNetworkTemplateSerializer80
 from nailgun.orchestrator import deployment_serializers
 from nailgun.orchestrator.deployment_serializers import \
     deployment_info_to_legacy
 from nailgun.orchestrator.deployment_serializers import \
     get_serializer_for_cluster
-from nailgun.extensions.network_manager.serializers.neutron_serializers import \
-    NeutronNetworkDeploymentSerializer80
-from nailgun.extensions.network_manager.serializers.neutron_serializers import \
-    NeutronNetworkTemplateSerializer80
 from nailgun.test.integration.test_orchestrator_serializer import \
     BaseDeploymentSerializer
 from nailgun.test.integration.test_orchestrator_serializer import \
