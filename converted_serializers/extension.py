@@ -28,7 +28,7 @@ logger = logging.getLogger(__name__)
 class ConvertPreLCMtoLCM(extensions.BasePipeline):
 
     @classmethod
-    def pre_process_data_for_cluster(cls,cluster, data, **kwargs):
+    def pre_process_data_for_cluster(cls, cluster, data, **kwargs):
         return data
 
     @classmethod
@@ -71,10 +71,13 @@ class ConvertPreLCMtoLCM(extensions.BasePipeline):
 
     @classmethod
     def process_deployment_for_cluster(cls, cluster, data, **kwargs):
-        pre_processed_data = cls.pre_process_data_for_cluster(cluster, data, **kwargs)
-        real_data = cls.serialize_cluster(cluster, pre_processed_data, **kwargs)
+        pre_processed_data = cls.pre_process_data_for_cluster(cluster, data,
+                                                              **kwargs)
+        real_data = cls.serialize_cluster(cluster, pre_processed_data,
+                                          **kwargs)
 
-        post_processed_data = cls.post_process_data_for_cluster(cluster, real_data, **kwargs)
+        post_processed_data = cls.post_process_data_for_cluster(
+            cluster, real_data, **kwargs)
         # copypaste cluster specific values from LCM serializer.
         # This is needed for tasks paramters interpolation like CLUSTER_ID
         cluster_data = data['cluster']
@@ -83,16 +86,13 @@ class ConvertPreLCMtoLCM(extensions.BasePipeline):
 
     @classmethod
     def process_deployment_for_node(cls, node, node_data, **kwargs):
-        pre_processed_data = cls.pre_process_data_for_node(node, node_data, **kwargs)
+        pre_processed_data = cls.pre_process_data_for_node(node,
+                                                           node_data, **kwargs)
         real_data = cls.serialize_node(node, pre_processed_data, **kwargs)
 
         post_processed_data = cls.post_process_data_for_node(node, real_data,
-                                                    **kwargs)
+                                                             **kwargs)
         return post_processed_data
-
-    #@classmethod
-    #def process_provisioning(cls, data, cluster, nodes, **kwargs):
-    #    return data
 
 
 class ConvertedSerializersExtension(extensions.BaseExtension):
