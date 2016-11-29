@@ -1,5 +1,5 @@
 Name:           fuel-nailgun-extension-converted-serializers
-Version:        10.0~b1
+Version:        9.0.1
 Release:        1%{?dist}
 Summary:        Converted serializers extension for Fuel
 License:        Apache-2.0
@@ -34,5 +34,8 @@ export OSLO_PACKAGE_VERSION=%{version}
 %{python2_sitelib}/*.egg-info
 
 %changelog
+* Thu Nov 29 2016 Roman Sokolkov <rsokolkov@mirantis.com> - 9.0.1-1
+- Fix version for stable/mitaka.
+
 * Thu Sep 8 2016 Vladimir Kuklin <vkuklin@mirantis.com> - 10.0~b1-1
 - Initial package.
