@@ -1,0 +1,8 @@
+Code-Review+2: Vladimir Kuklin <vkuklin@mirantis.com>
+Workflow+1: Vladimir Kuklin <vkuklin@mirantis.com>
+Verified+2: Jenkins
+Submitted-by: Jenkins
+Submitted-at: Fri, 02 Dec 2016 12:23:47 +0000
+Reviewed-on: https://review.openstack.org/405980
+Project: openstack/fuel-nailgun-extension-converted-serializers
+Branch: refs/heads/stable/mitaka
