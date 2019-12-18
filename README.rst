@@ -1,10 +1,10 @@
-Fuel nailgun extenstion for converted serializers
-=================================================
+This project is no longer maintained.
 
-This extension for Nailgun provides conversion layer which triggers pre-Mitaka
-serializers to generate deployment data, so that pre-9.x clusters can leverage
-Fuel Mitaka LCM features
+The contents of this repository are still available in the Git
+source code management system.  To see the contents of this
+repository before it reached its end of life, please check out the
+previous commit with "git checkout HEAD^1".
 
-Installation
------------
-Just install the package `fuel-nailgun-extension-converted-serializers`
+For any further questions, please email
+openstack-discuss@lists.openstack.org or join #openstack-dev on
+Freenode.
